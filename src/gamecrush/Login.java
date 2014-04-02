@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package game.crush;
+package gamecrush;
 
 import java.awt.Color;
 import java.sql.Connection;
