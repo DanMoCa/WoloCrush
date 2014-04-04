@@ -25,16 +25,27 @@ public class PanelEmpleados extends javax.swing.JPanel {
      * Creates new form PanelEmpleados
      */
     
+    public void clearTxtFields(){
+        this.jTxtFldNombre.setText("");
+        this.jTxtFldApellidoM.setText("");
+        this.jTxtFldApellidoP.setText("");
+        this.jTxtFldPuesto.setText("");
+        this.jTxtFldTelefono.setText("");
+    }
     ResultSet emp;
     Statement st;
     String idemp,nombre,apellido_p,apellido_m,telefono,idpuesto;
+    Validacion val = new Validacion();
     
     public PanelEmpleados() {
         
         
         initComponents();
         cargarEmpleados();
-        System.out.println(jTable1.getRowCount());
+        System.out.println(jTblEmpleados.getRowCount());
+        val.validateIdPuesto(this.jTxtFldPuesto);
+        this.jTxtFldPuesto.setDocument(new jTxtFldLimit(1));
+        
     }
 
     /**
@@ -49,7 +60,7 @@ public class PanelEmpleados extends javax.swing.JPanel {
             Connection conn = Conexion.GetConnection();
             try {
                 st = conn.createStatement();
-                emp = st.executeQuery("SELECT * FROM Empleados GROUP BY nombre");
+                emp = st.executeQuery("SELECT * FROM Empleados");
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, e.getErrorCode() + ": " + e.getMessage());
             }
@@ -63,7 +74,7 @@ public class PanelEmpleados extends javax.swing.JPanel {
                 tm.addRow(row);
             }
             
-            jTable1.setModel(tm);
+            jTblEmpleados.setModel(tm);
         } catch (SQLException e) {
             Logger.getLogger(GameCrush.class.getName()).log(Level.SEVERE,null,e);
         }
@@ -74,21 +85,21 @@ public class PanelEmpleados extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        jTxtFldNombre = new javax.swing.JTextField();
+        jTxtFldApellidoP = new javax.swing.JTextField();
+        jTxtFldApellidoM = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jTxtFldTelefono = new javax.swing.JTextField();
+        jTxtFldPuesto = new javax.swing.JTextField();
+        jBtnInsert = new javax.swing.JButton();
+        jBtnDelete = new javax.swing.JButton();
+        jBtnUpdate = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTblEmpleados = new javax.swing.JTable();
 
         jLabel1.setText("Nombre");
 
@@ -100,18 +111,30 @@ public class PanelEmpleados extends javax.swing.JPanel {
 
         jLabel5.setText("Puesto");
 
-        jButton1.setText("Insert");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jBtnInsert.setText("Insert");
+        jBtnInsert.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jBtnInsertActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Delete");
+        jBtnDelete.setText("Delete");
+        jBtnDelete.setEnabled(false);
+        jBtnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnDeleteActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Update");
+        jBtnUpdate.setText("Update");
+        jBtnUpdate.setEnabled(false);
+        jBtnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnUpdateActionPerformed(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTblEmpleados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -122,7 +145,12 @@ public class PanelEmpleados extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jTblEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTblEmpleadosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTblEmpleados);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -141,16 +169,16 @@ public class PanelEmpleados extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTxtFldNombre)
+                            .addComponent(jTxtFldApellidoP, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jTxtFldTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtFldApellidoM, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtFldPuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jBtnInsert)
+                    .addComponent(jBtnDelete)
+                    .addComponent(jBtnUpdate))
                 .addContainerGap(118, Short.MAX_VALUE))
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
@@ -163,86 +191,131 @@ public class PanelEmpleados extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTxtFldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTxtFldApellidoP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTxtFldApellidoM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTxtFldTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(jBtnInsert)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(jBtnDelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)))
+                        .addComponent(jBtnUpdate)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtFldPuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(12, 12, 12))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jBtnInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnInsertActionPerformed
         // TODO add your handling code here:
         try {
             Connection conn = Conexion.GetConnection();
-            System.out.println("holi1");
-            if(jTable1.getRowCount() > 0){
-                try {
-                    int temp1,count = jTable1.getRowCount();
-                    System.out.println(jTable1.getValueAt(count, 0));
-                    idemp=null;
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, e.getMessage());
-                }
-                
-            }else{
-                idemp = "e1";
-            }
-           /* System.out.println("Holi3");
-            nombre      = jTextField1.getText();
-            apellido_p  = jTextField2.getText();
-            apellido_m  = jTextField3.getText();
-            telefono    = jTextField4.getText();
-            idpuesto    = jTextField5.getText();
-            System.out.println(idemp+nombre+apellido_p+apellido_m+telefono+idpuesto);
+            nombre      = jTxtFldNombre.getText();
+            apellido_p  = jTxtFldApellidoP.getText();
+            apellido_m  = jTxtFldApellidoM.getText();
+            telefono    = jTxtFldTelefono.getText();
+            idpuesto    = jTxtFldPuesto.getText();
             
             st = conn.createStatement();
-            System.out.println("INSERT INTO gamecrush.empleados VALUES('"+idemp+"','"+nombre+"','"+apellido_p+"','"+apellido_m+"','"+telefono+"','"+idpuesto+"')");;
-            st.execute("INSERT INTO gamecrush.empleados VALUES('"+idemp+"','"+nombre+"','"+apellido_p+"','"+apellido_m+"','"+telefono+"','"+idpuesto+"')");
-            */
+            st.execute("INSERT INTO gamecrush.empleados(nombre,apellido_p,apellido_m,telefono,puesto_idpuesto) VALUES('"+nombre+"','"+apellido_p+"','"+apellido_m+"','"+telefono+"','"+idpuesto+"');");
             cargarEmpleados();
-            st = conn.createStatement();
+            clearTxtFields();
+            
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getErrorCode() +": "+e.getMessage());
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jBtnInsertActionPerformed
+
+    private void jBtnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnDeleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            Connection conn = Conexion.GetConnection();
+            st = conn.createStatement();
+            
+            st.execute("DELETE FROM gamecrush.empleados WHERE idEmpleados = '"+(String)jTblEmpleados.getValueAt(jTblEmpleados.getSelectedRow(), 0)+"';");
+            cargarEmpleados();
+            clearTxtFields();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getErrorCode()+": "+e.getMessage());
+        }
+        
+        jBtnDelete.setEnabled(false);
+    }//GEN-LAST:event_jBtnDeleteActionPerformed
+
+    private void jTblEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblEmpleadosMouseClicked
+        // TODO add your handling code here:
+        jBtnDelete.setEnabled(true);
+        jBtnUpdate.setEnabled(true);
+        
+        this.jTxtFldNombre.setText(     (String)this.jTblEmpleados.getValueAt(jTblEmpleados.getSelectedRow(), 1));
+        this.jTxtFldApellidoP.setText(  (String)this.jTblEmpleados.getValueAt(jTblEmpleados.getSelectedRow(), 2));
+        this.jTxtFldApellidoM.setText(  (String)this.jTblEmpleados.getValueAt(jTblEmpleados.getSelectedRow(), 3));
+        this.jTxtFldTelefono.setText(   (String)this.jTblEmpleados.getValueAt(jTblEmpleados.getSelectedRow(), 4));
+        this.jTxtFldPuesto.setText(     (String)this.jTblEmpleados.getValueAt(jTblEmpleados.getSelectedRow(), 5));
+    }//GEN-LAST:event_jTblEmpleadosMouseClicked
+
+    private void jBtnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnUpdateActionPerformed
+        // TODO add your handling code here:
+        try {
+            Connection conn = Conexion.GetConnection();
+            st = conn.createStatement();
+            this.nombre = jTxtFldNombre.getText();
+            this.apellido_p = jTxtFldApellidoP.getText();
+            this.apellido_m = jTxtFldApellidoM.getText();
+            this.telefono = jTxtFldTelefono.getText();
+            this.idpuesto = jTxtFldPuesto.getText();
+            String idemp = (String)jTblEmpleados.getValueAt(jTblEmpleados.getSelectedRow(), 0);
+            st.execute("UPDATE empleados "
+                    + "SET nombre = '"+nombre+"', "
+                    + "apellido_p = '"+apellido_p+"', "
+                    + "apellido_m = '"+apellido_m+"', "
+                    + "telefono = '"+telefono+"', "
+                    + "Puesto_idPuesto = "+idpuesto+" "
+                    + "WHERE idEmpleados = '"+idemp+"' AND Puesto_idPuesto = '"+idpuesto+"'");
+            System.out.println("UPDATE empleados "
+                    + "SET nombre = '"+nombre+"', "
+                    + "apellido_p = '"+apellido_p+"', "
+                    + "apellido_m = '"+apellido_m+"', "
+                    + "telefono = '"+telefono+"', "
+                    + "Puesto_idPuesto = "+idpuesto+" "
+                    + "WHERE idEmpleados = "+idemp+";");
+            cargarEmpleados();
+            clearTxtFields();
+            this.jBtnUpdate.setEnabled(false);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getErrorCode()+": "+e.getMessage());
+        }
+    }//GEN-LAST:event_jBtnUpdateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jBtnDelete;
+    private javax.swing.JButton jBtnInsert;
+    private javax.swing.JButton jBtnUpdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTable jTblEmpleados;
+    private javax.swing.JTextField jTxtFldApellidoM;
+    private javax.swing.JTextField jTxtFldApellidoP;
+    private javax.swing.JTextField jTxtFldNombre;
+    private javax.swing.JTextField jTxtFldPuesto;
+    private javax.swing.JTextField jTxtFldTelefono;
     // End of variables declaration//GEN-END:variables
 }
