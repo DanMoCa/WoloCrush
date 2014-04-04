@@ -7,6 +7,7 @@
 package gamecrush;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -268,9 +269,20 @@ public class PanelEmpleados extends javax.swing.JPanel {
     }//GEN-LAST:event_jTblEmpleadosMouseClicked
 
     private void jBtnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnUpdateActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:|
         try {
+            String sql ="UPDATE empleados "
+                    + "SET nombre = ?, "
+                    + "apellido_p = ?, "
+                    + "apellido_m = ?, "
+                    + "telefono = ?, "
+                    + "Puesto_idPuesto = ? "
+                    + "WHERE idEmpleados = ? ";
             Connection conn = Conexion.GetConnection();
+            conn.setAutoCommit(false);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            
+            
             st = conn.createStatement();
             this.nombre = jTxtFldNombre.getText();
             this.apellido_p = jTxtFldApellidoP.getText();
@@ -278,20 +290,16 @@ public class PanelEmpleados extends javax.swing.JPanel {
             this.telefono = jTxtFldTelefono.getText();
             this.idpuesto = jTxtFldPuesto.getText();
             String idemp = (String)jTblEmpleados.getValueAt(jTblEmpleados.getSelectedRow(), 0);
-            st.execute("UPDATE empleados "
-                    + "SET nombre = '"+nombre+"', "
-                    + "apellido_p = '"+apellido_p+"', "
-                    + "apellido_m = '"+apellido_m+"', "
-                    + "telefono = '"+telefono+"', "
-                    + "Puesto_idPuesto = "+idpuesto+" "
-                    + "WHERE idEmpleados = '"+idemp+"' AND Puesto_idPuesto = '"+idpuesto+"'");
-            System.out.println("UPDATE empleados "
-                    + "SET nombre = '"+nombre+"', "
-                    + "apellido_p = '"+apellido_p+"', "
-                    + "apellido_m = '"+apellido_m+"', "
-                    + "telefono = '"+telefono+"', "
-                    + "Puesto_idPuesto = "+idpuesto+" "
-                    + "WHERE idEmpleados = "+idemp+";");
+            ps.setString(1, nombre);
+            ps.setString(2, apellido_p);
+            ps.setString(3, apellido_m);
+            ps.setString(4, telefono);
+            ps.setString(5, idpuesto);
+            ps.setString(6, idemp);
+            
+            ps.executeUpdate();
+            conn.commit();
+            
             cargarEmpleados();
             clearTxtFields();
             this.jBtnUpdate.setEnabled(false);
