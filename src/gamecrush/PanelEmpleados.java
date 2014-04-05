@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author DanDesktop
  */
-public class PanelEmpleados extends javax.swing.JPanel {
+public final class PanelEmpleados extends javax.swing.JPanel {
 
     /**
      * Creates new form PanelEmpleados
@@ -283,19 +283,19 @@ public class PanelEmpleados extends javax.swing.JPanel {
             PreparedStatement ps = conn.prepareStatement(sql);
             
             
-            st = conn.createStatement();
+            
             this.nombre = jTxtFldNombre.getText();
             this.apellido_p = jTxtFldApellidoP.getText();
             this.apellido_m = jTxtFldApellidoM.getText();
             this.telefono = jTxtFldTelefono.getText();
             this.idpuesto = jTxtFldPuesto.getText();
-            String idemp = (String)jTblEmpleados.getValueAt(jTblEmpleados.getSelectedRow(), 0);
+            String idEmpleado = (String)jTblEmpleados.getValueAt(jTblEmpleados.getSelectedRow(), 0);
             ps.setString(1, nombre);
             ps.setString(2, apellido_p);
             ps.setString(3, apellido_m);
             ps.setString(4, telefono);
             ps.setString(5, idpuesto);
-            ps.setString(6, idemp);
+            ps.setString(6, idEmpleado);
             
             ps.executeUpdate();
             conn.commit();

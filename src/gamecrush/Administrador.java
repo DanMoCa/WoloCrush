@@ -6,6 +6,9 @@
 
 package gamecrush;
 
+import java.net.URL;
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author DanDesktop
@@ -17,7 +20,12 @@ public class Administrador extends javax.swing.JFrame {
      */
     public Administrador() {
         initComponents();
-        
+        URL resource = Administrador.class.getResource("/img/Icono.png");
+        ImageIcon img = new ImageIcon(resource);
+        this.setIconImage(img.getImage());
+        jTabbedPane1.add(new PanelClientes(),"Clientes");
+        jTabbedPane1.add(new PanelDirecciones(),"Direcciones");
+        jTabbedPane1.add(new PanelProductos(),"Productos");
         jTabbedPane1.add(new PanelEmpleados(),"Empleados");
     }
 
@@ -33,6 +41,7 @@ public class Administrador extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImages(null);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

@@ -6,6 +6,9 @@
 
 package gamecrush;
 
+import java.net.URL;
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author DanDesktop
@@ -17,6 +20,9 @@ public class Ventas extends javax.swing.JFrame {
      */
     public Ventas() {
         initComponents();
+        URL resource = Administrador.class.getResource("/img/Icono.png");
+        ImageIcon img = new ImageIcon(resource);
+        this.setIconImage(img.getImage());
     }
 
     /**
@@ -42,6 +48,7 @@ public class Ventas extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
