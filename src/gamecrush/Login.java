@@ -9,7 +9,6 @@ package gamecrush;
 import java.awt.Color;
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -143,7 +142,7 @@ public class Login extends javax.swing.JFrame {
         Connection conn = Conexion.GetConnection();
             try {
                 if (username != null && password!=null){
-                    System.out.println("holi");
+                    
                     String sql = ("SELECT Puesto_idPuesto FROM empleados WHERE idEmpleados='" + username + "' AND telefono='" + password + "'");
                     st = conn.createStatement();
                     rs = st.executeQuery(sql);
@@ -151,7 +150,7 @@ public class Login extends javax.swing.JFrame {
                         //in this case enter when at least one result comes it means user is valid
                         JOptionPane.showMessageDialog(this,"Usuario Encontrado");
                         String [] val = {rs.getString(1)};
-                        System.out.println(val[0]);
+                        
                         if("2".equals(val[0])){
                             JOptionPane.showMessageDialog(this, "Bienvenido Vendedor!");
                             Ventas vent = new Ventas();

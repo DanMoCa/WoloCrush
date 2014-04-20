@@ -23,12 +23,12 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `gamecrush`.`Dirección`
+-- Table `gamecrush`.`Direccion`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `gamecrush`.`Dirección` ;
+DROP TABLE IF EXISTS `gamecrush`.`Direccion` ;
 
-CREATE TABLE IF NOT EXISTS `gamecrush`.`Dirección` (
-  `idDirección` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `gamecrush`.`Direccion` (
+  `idDireccion` INT NOT NULL AUTO_INCREMENT,
   `calle` VARCHAR(45) NOT NULL,
   `colonia` VARCHAR(45) NOT NULL,
   `num_interior` VARCHAR(45) NULL DEFAULT 'N/A',
@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS `gamecrush`.`Dirección` (
   `ciudad` VARCHAR(45) NOT NULL,
   `codigo_postal` INT NOT NULL,
   `Clientes_idClientes` INT NOT NULL,
-  PRIMARY KEY (`idDirección`, `Clientes_idClientes`),
-  CONSTRAINT `fk_Dirección_Clientes1`
+  PRIMARY KEY (`idDireccion`, `Clientes_idClientes`),
+  CONSTRAINT `fk_Direccion_Clientes1`
     FOREIGN KEY (`Clientes_idClientes`)
     REFERENCES `gamecrush`.`Clientes` (`idClientes`)
     ON DELETE NO ACTION
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `gamecrush`.`Dirección` (
 ENGINE = InnoDB
 COMMENT = '	';
 
-CREATE INDEX `fk_Dirección_Clientes1_idx` ON `gamecrush`.`Dirección` (`Clientes_idClientes` ASC);
+CREATE INDEX `fk_Direccion_Clientes1_idx` ON `gamecrush`.`Direccion` (`Clientes_idClientes` ASC);
 
 
 -- -----------------------------------------------------
