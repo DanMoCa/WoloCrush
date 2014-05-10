@@ -231,7 +231,8 @@ public final class PanelEmpleados extends javax.swing.JPanel {
             idpuesto    = jTxtFldPuesto.getText();
             
             st = conn.createStatement();
-            st.execute("INSERT INTO gamecrush.empleados(nombre,apellido_p,apellido_m,telefono,puesto_idpuesto) VALUES('"+nombre+"','"+apellido_p+"','"+apellido_m+"','"+telefono+"','"+idpuesto+"');");
+            st.execute("INSERT INTO gamecrush.empleados(nombre,apellido_p,apellido_m,telefono,puesto_idpuesto) "
+                    + "VALUES('"+nombre+"','"+apellido_p+"','"+apellido_m+"','"+telefono+"','"+idpuesto+"');");
             cargarEmpleados();
             clearTxtFields();
             
@@ -254,6 +255,7 @@ public final class PanelEmpleados extends javax.swing.JPanel {
         }
         
         jBtnDelete.setEnabled(false);
+        jBtnUpdate.setEnabled(false);
     }//GEN-LAST:event_jBtnDeleteActionPerformed
 
     private void jTblEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblEmpleadosMouseClicked
@@ -298,6 +300,7 @@ public final class PanelEmpleados extends javax.swing.JPanel {
             ps.setString(6, idEmpleado);
             
             ps.executeUpdate();
+            
             conn.commit();
             
             cargarEmpleados();
