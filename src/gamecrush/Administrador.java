@@ -23,10 +23,10 @@ public class Administrador extends javax.swing.JFrame {
         URL resource = Administrador.class.getResource("/img/Icono.png");
         ImageIcon img = new ImageIcon(resource);
         this.setIconImage(img.getImage());
-        jTabbedPane1.add(new PanelClientes(),"Clientes");
-        jTabbedPane1.add(new PanelDirecciones(),"Direcciones");
-        jTabbedPane1.add(new PanelProductos(),"Productos");
-        jTabbedPane1.add(new PanelEmpleados(),"Empleados");
+        jTabbedPane1.add(new PanelPedidosNuevos(),"Nuevo Pedido");
+        jTabbedPane1.add(new PanelPedidos(),"Pedidos");
+        
+        
     }
 
     /**
@@ -39,9 +39,95 @@ public class Administrador extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuClientes = new javax.swing.JMenuItem();
+        jMenuProductos = new javax.swing.JMenuItem();
+        jMenuEmpleados = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuVentas = new javax.swing.JMenuItem();
+        jMenuPedidos = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuLogin = new javax.swing.JMenuItem();
+        jMenuSalir = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImages(null);
+
+        jMenu1.setText("File");
+
+        jMenuClientes.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuClientes.setText("Clientes");
+        jMenuClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuClientesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuClientes);
+
+        jMenuProductos.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuProductos.setText("Productos");
+        jMenuProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuProductosActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuProductos);
+
+        jMenuEmpleados.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuEmpleados.setText("Empleados");
+        jMenuEmpleados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuEmpleadosActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuEmpleados);
+        jMenu1.add(jSeparator1);
+
+        jMenuVentas.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.ALT_MASK));
+        jMenuVentas.setText("Ventas");
+        jMenuVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuVentasActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuVentas);
+
+        jMenuPedidos.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuPedidos.setText("Pedidos");
+        jMenuPedidos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuPedidosActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuPedidos);
+        jMenu1.add(jSeparator2);
+
+        jMenuLogin.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuLogin.setText("Login");
+        jMenuLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuLoginActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuLogin);
+
+        jMenuSalir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuSalir.setText("Salir");
+        jMenuSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuSalirActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuSalir);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -51,12 +137,57 @@ public class Administrador extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuSalirActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jMenuSalirActionPerformed
+
+    private void jMenuLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuLoginActionPerformed
+        // TODO add your handling code here:
+        Login log = new Login();
+        log.setVisible(true);
+        this.dispose();
+        System.out.println("Holi");
+    }//GEN-LAST:event_jMenuLoginActionPerformed
+
+    private void jMenuEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuEmpleadosActionPerformed
+        // TODO add your handling code here:
+        jTabbedPane1.removeAll();
+        jTabbedPane1.add(new PanelEmpleados(),"Empleados");
+    }//GEN-LAST:event_jMenuEmpleadosActionPerformed
+
+    private void jMenuClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuClientesActionPerformed
+        // TODO add your handling code here:
+        jTabbedPane1.removeAll();
+        jTabbedPane1.add(new PanelClientes(),"Clientes");
+        jTabbedPane1.add(new PanelDirecciones(),"Direcciones");
+    }//GEN-LAST:event_jMenuClientesActionPerformed
+
+    private void jMenuProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuProductosActionPerformed
+        // TODO add your handling code here:
+        jTabbedPane1.removeAll();
+        jTabbedPane1.add(new PanelProductos(),"Productos");
+    }//GEN-LAST:event_jMenuProductosActionPerformed
+
+    private void jMenuVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuVentasActionPerformed
+        // TODO add your handling code here:
+        jTabbedPane1.removeAll();
+        jTabbedPane1.add(new PanelVentas(), "Ventas");
+    }//GEN-LAST:event_jMenuVentasActionPerformed
+
+    private void jMenuPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuPedidosActionPerformed
+        // TODO add your handling code here:
+        jTabbedPane1.removeAll();
+        jTabbedPane1.add(new PanelPedidosNuevos(),"Nuevo Pedido");
+        jTabbedPane1.add(new PanelPedidos(),"Pedidos");
+    }//GEN-LAST:event_jMenuPedidosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -94,6 +225,18 @@ public class Administrador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuClientes;
+    private javax.swing.JMenuItem jMenuEmpleados;
+    private javax.swing.JMenuItem jMenuLogin;
+    private javax.swing.JMenuItem jMenuPedidos;
+    private javax.swing.JMenuItem jMenuProductos;
+    private javax.swing.JMenuItem jMenuSalir;
+    private javax.swing.JMenuItem jMenuVentas;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }

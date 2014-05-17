@@ -38,13 +38,13 @@
                   <Component id="jTxtFldApellidoM" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
                   <Component id="jTxtFldPuesto" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jBtnUpdate" max="32767" attributes="0"/>
                   <Component id="jBtnInsert" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jBtnDelete" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jBtnDelete" alignment="0" min="-2" pref="67" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
           </Group>
           <Component id="jScrollPane1" alignment="0" pref="395" max="32767" attributes="0"/>
       </Group>
@@ -53,8 +53,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="199" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="252" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -76,6 +76,11 @@
                           <Component id="jTxtFldTelefono" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jTxtFldPuesto" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="jBtnInsert" min="-2" max="-2" attributes="0"/>
@@ -84,11 +89,6 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jBtnUpdate" min="-2" max="-2" attributes="0"/>
                   </Group>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jTxtFldPuesto" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
           </Group>
