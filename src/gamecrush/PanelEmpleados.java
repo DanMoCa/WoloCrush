@@ -67,7 +67,12 @@ public final class PanelEmpleados extends javax.swing.JPanel {
             
             String [] columns ={"idEmpleado","nombre","apellido_p","apellido_m","telefono","idPuesto"} ;
             
-            DefaultTableModel tm = new DefaultTableModel(null,columns);
+            DefaultTableModel tm = new DefaultTableModel(null,columns){
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex){
+                    return false;
+                }
+            };
             
             while(emp.next()){
                 String [] row = {emp.getString(1),emp.getString(2),emp.getString(3),emp.getString(4),emp.getString(5),emp.getString(6)};

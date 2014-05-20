@@ -63,7 +63,12 @@ public class PanelClientes extends javax.swing.JPanel {
             
             String [] columns ={"idCliente","Nombre","Apellido Paterno","Apellido Materno","Telefono","E-Mail"};
             
-            DefaultTableModel tm = new DefaultTableModel(null,columns);
+            DefaultTableModel tm = new DefaultTableModel(null,columns){
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex){
+                    return false;
+                }
+            };
             
             while(cli.next()){
                 String [] row = {cli.getString(1),cli.getString(2),cli.getString(3),cli.getString(4),cli.getString(5),cli.getString(6)};

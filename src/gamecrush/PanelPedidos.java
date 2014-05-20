@@ -3,8 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package gamecrush;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,8 +23,81 @@ public class PanelPedidos extends javax.swing.JPanel {
     /**
      * Creates new form PanelPedidos
      */
+    ResultSet Pedidos, PedidosHas;
+
     public PanelPedidos() {
         initComponents();
+        cargarPedidos();
+    }
+
+    public void cargarPedidos() {
+
+        String sql = "SELECT t2.idpedidos AS id_pedido , t1.nombres AS clientes, t3.nombre AS empleado, t2.precio_total "
+                + "FROM clientes AS t1, pedidos AS t2, empleados AS t3 "
+                + "WHERE t1.idclientes = t2.clientes_idclientes "
+                + "AND t3.idempleados = t2.empleados_idempleados "
+                + "ORDER BY id_pedido";
+        String[] columnsPed = {"id Pedido", "Cliente", "Empleado", "Total Pedido"};
+        DefaultTableModel tmPed = new DefaultTableModel(null, columnsPed) {
+            @Override
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false;
+            }
+        };
+
+        try {
+            Connection connPed = Conexion.GetConnection();
+            PreparedStatement ps = connPed.prepareStatement(sql);
+            Pedidos = ps.executeQuery();
+
+            while (Pedidos.next()) {
+                String[] row = {Pedidos.getString(1), Pedidos.getString(2), Pedidos.getString(3), Pedidos.getString(4)};
+                tmPed.addRow(row);
+            }
+            jTablePedidos.setModel(tmPed);
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelPedidos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void cargarPedHas() {
+        String sql = "SELECT t1.productos_idproductos, t2.nombre_producto, t2.proveedor, t1.cantidad_pedido,t2.precio * t1.cantidad_pedido "
+                + "FROM productos_has_pedidos AS t1, productos AS t2 "
+                + "WHERE t1.Productos_idProductos = t2.idProductos "
+                + "AND t1.Pedidos_idPedidos = ? "
+                + "ORDER BY Productos_idProductos";
+        try {
+            Connection connPedHas = Conexion.GetConnection();
+            String[] columnspedHas = {"id Producto", "Producto", "Proveedor", "Cantidad", "Precio"};
+            DefaultTableModel tmPedHas = new DefaultTableModel(null, columnspedHas) {
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex) {
+                    if (colIndex == 3) {
+                        return true;
+                    }
+                    return false;
+                }
+            };
+            PreparedStatement ps = connPedHas.prepareStatement(sql);
+            String idped = (String)jTablePedidos.getValueAt(jTablePedidos.getSelectedRow(), 0);
+            ps.setString(1, idped);
+            
+            this.PedidosHas = ps.executeQuery();
+            
+            while(PedidosHas.next()){
+                String [] row ={PedidosHas.getString(1),PedidosHas.getString(2),PedidosHas.getString(3),PedidosHas.getString(4),PedidosHas.getString(5)};
+                tmPedHas.addRow(row);
+            }
+            
+            jTablePedHas.setModel(tmPedHas);
+        } catch (Exception e) {
+        }
+    }
+
+    public String getSelectedPedido() {
+        String idpedido = (String) jTablePedidos.getValueAt(jTablePedidos.getSelectedRow(), 0);
+        return idpedido;
     }
 
     /**
@@ -28,19 +109,104 @@ public class PanelPedidos extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTablePedidos = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTablePedHas = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
+        jTextField1.setText("jTextField1");
+
+        jTablePedidos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jTablePedidos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTablePedidosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTablePedidos);
+
+        jTablePedHas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTablePedHas);
+
+        jButton1.setText("jButton1");
+
+        jButton2.setText("jButton2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 777, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(jButton2))
+                        .addGap(177, 177, 177))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(174, 174, 174)
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2)))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTablePedidosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePedidosMouseClicked
+        // TODO add your handling code here:
+        cargarPedHas();
+    }//GEN-LAST:event_jTablePedidosMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTablePedHas;
+    private javax.swing.JTable jTablePedidos;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

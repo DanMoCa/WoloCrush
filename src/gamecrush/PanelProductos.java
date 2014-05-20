@@ -57,7 +57,12 @@ public class PanelProductos extends javax.swing.JPanel {
             }
             
             String [] columns ={"idProducto","Nombre","Tipo","precio","proveedor","cantidad"};
-            DefaultTableModel tm = new DefaultTableModel(null,columns);
+            DefaultTableModel tm = new DefaultTableModel(null,columns){
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex){
+                    return false;
+                }
+            };
             
             while(pro.next()){
                 String [] row = {pro.getString(1),pro.getString(2),pro.getString(3),"$ "+pro.getString(4),pro.getString(5),pro.getString(6)};

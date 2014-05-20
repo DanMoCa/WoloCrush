@@ -30,7 +30,12 @@ public class PanelDirecciones extends javax.swing.JPanel {
         cargarClientes();
         String [] columns ={"id Dirección","Calle","Colonia","Num Interior","Num Exterior","Estado","Pais","Ciudad","Codigo Postal","id Cliente"};
         
-        DefaultTableModel tm = new DefaultTableModel(null,columns);
+        DefaultTableModel tm = new DefaultTableModel(null,columns){
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex){
+                    return false;
+                }
+            };
         jTblDirecciones.setModel(tm);
         jLblCamposObligatorios.setVisible(false);
         disableCampos();
@@ -92,7 +97,12 @@ public class PanelDirecciones extends javax.swing.JPanel {
             
             String [] columns ={"idCliente","Nombre","Apellido Paterno","Apellido Materno","Telefono","E-Mail"};
             
-            DefaultTableModel tm = new DefaultTableModel(null,columns);
+            DefaultTableModel tm = new DefaultTableModel(null,columns){
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex){
+                    return false;
+                }
+            };
             
             while(cli.next()){
                 String [] row = {cli.getString(1),cli.getString(2),cli.getString(3),cli.getString(4),cli.getString(5),cli.getString(6)};
@@ -117,7 +127,12 @@ public class PanelDirecciones extends javax.swing.JPanel {
             this.cli = ps.executeQuery();
             
             String [] columns ={"id Dirección","Calle","Colonia","Num Interior","Num Exterior","Estado","Pais","Ciudad","Codigo Postal","id Cliente"};
-            DefaultTableModel tm = new DefaultTableModel(null,columns);
+            DefaultTableModel tm = new DefaultTableModel(null,columns){
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex){
+                    return false;
+                }
+            };
             
             while(cli.next()){
                 String [] row = {cli.getString(1),cli.getString(2),cli.getString(3),cli.getString(4),cli.getString(5),cli.getString(6),cli.getString(7),cli.getString(8),cli.getString(9),cli.getString(10)};
@@ -182,6 +197,11 @@ public class PanelDirecciones extends javax.swing.JPanel {
         jTxtFldFind.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTxtFldFindMouseClicked(evt);
+            }
+        });
+        jTxtFldFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxtFldFindActionPerformed(evt);
             }
         });
         jTxtFldFind.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -551,7 +571,12 @@ public class PanelDirecciones extends javax.swing.JPanel {
             
             String [] columns ={"idCliente","Nombre","Apellido Paterno","Apellido Materno","Telefono","E-Mail"};
             
-            DefaultTableModel tm = new DefaultTableModel(null,columns);
+            DefaultTableModel tm = new DefaultTableModel(null,columns){
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex){
+                    return false;
+                }
+            };
             
             while(cli.next()){
                 String [] row = {cli.getString(1),cli.getString(2),cli.getString(3),cli.getString(4),cli.getString(5),cli.getString(6)};
@@ -567,6 +592,10 @@ public class PanelDirecciones extends javax.swing.JPanel {
         // TODO add your handling code here:
         this.jTxtFldFind.setText("");
     }//GEN-LAST:event_jTxtFldFindMouseClicked
+
+    private void jTxtFldFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtFldFindActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTxtFldFindActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
