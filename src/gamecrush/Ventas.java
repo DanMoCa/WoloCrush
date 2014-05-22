@@ -338,10 +338,10 @@ public class Ventas extends javax.swing.JFrame {
                 ps.execute();
                 conn.commit();
                 
-                String sqlLast = "SELECT `AUTO_INCREMENT` - 2 "
+                String sqlLast = "SELECT `AUTO_INCREMENT` - 1 "
                         + " FROM  INFORMATION_SCHEMA.TABLES "
                         + " WHERE TABLE_SCHEMA = 'gamecrush' "
-                        + " AND   TABLE_NAME   = 'pedidos' ";
+                        + " AND   TABLE_NAME   = 'ventas' ";
                 Connection connLast = Conexion.GetConnection();
                 PreparedStatement psLast = connLast.prepareStatement(sqlLast);
                 lastId = psLast.executeQuery();

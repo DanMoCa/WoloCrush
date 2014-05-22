@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `gamecrush`.`Clientes` (
   `apellido_p` VARCHAR(45) NOT NULL,
   `apellido_m` VARCHAR(45) NOT NULL,
   `telefono` VARCHAR(45) NOT NULL,
-  `e-mail` VARCHAR(45) NOT NULL DEFAULT 'N/A',
+  `email` VARCHAR(45) NOT NULL DEFAULT 'N/A',
   PRIMARY KEY (`idClientes`))
 ENGINE = InnoDB;
 
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `gamecrush`.`Direccion` (
   `codigo_postal` INT NOT NULL,
   `Clientes_idClientes` INT NOT NULL,
   PRIMARY KEY (`idDireccion`, `Clientes_idClientes`),
-  CONSTRAINT `fk_Direccion_Clientes1`
+  CONSTRAINT `fk_Dirección_Clientes1`
     FOREIGN KEY (`Clientes_idClientes`)
     REFERENCES `gamecrush`.`Clientes` (`idClientes`)
     ON DELETE NO ACTION
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `gamecrush`.`Direccion` (
 ENGINE = InnoDB
 COMMENT = '	';
 
-CREATE INDEX `fk_Direccion_Clientes1_idx` ON `gamecrush`.`Direccion` (`Clientes_idClientes` ASC);
+CREATE INDEX `fk_Dirección_Clientes1_idx` ON `gamecrush`.`Direccion` (`Clientes_idClientes` ASC);
 
 
 -- -----------------------------------------------------
@@ -61,37 +61,9 @@ CREATE TABLE IF NOT EXISTS `gamecrush`.`Productos` (
   `tipo` VARCHAR(45) NOT NULL,
   `precio` DOUBLE NOT NULL,
   `proveedor` VARCHAR(45) NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`idProductos`))
 ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `gamecrush`.`Preventas`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `gamecrush`.`Preventas` ;
-
-CREATE TABLE IF NOT EXISTS `gamecrush`.`Preventas` (
-  `idPreventas` INT NOT NULL AUTO_INCREMENT,
-  `fecha_salida` DATETIME NOT NULL,
-  `Clientes_idClientes` INT NOT NULL,
-  `Productos_idProductos` INT NOT NULL,
-  PRIMARY KEY (`idPreventas`),
-  CONSTRAINT `fk_Preventas_Clientes1`
-    FOREIGN KEY (`Clientes_idClientes`)
-    REFERENCES `gamecrush`.`Clientes` (`idClientes`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Preventas_Productos1`
-    FOREIGN KEY (`Productos_idProductos`)
-    REFERENCES `gamecrush`.`Productos` (`idProductos`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = '	';
-
-CREATE INDEX `fk_Preventas_Clientes1_idx` ON `gamecrush`.`Preventas` (`Clientes_idClientes` ASC);
-
-CREATE INDEX `fk_Preventas_Productos1_idx` ON `gamecrush`.`Preventas` (`Productos_idProductos` ASC);
 
 
 -- -----------------------------------------------------
@@ -137,6 +109,7 @@ DROP TABLE IF EXISTS `gamecrush`.`Ventas` ;
 CREATE TABLE IF NOT EXISTS `gamecrush`.`Ventas` (
   `idVentas` INT NOT NULL AUTO_INCREMENT,
   `Empleados_idEmpleados` INT NOT NULL,
+  `precio_total` DOUBLE NOT NULL,
   PRIMARY KEY (`idVentas`),
   CONSTRAINT `fk_Ventas_Empleados1`
     FOREIGN KEY (`Empleados_idEmpleados`)
@@ -158,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `gamecrush`.`Pedidos` (
   `precio_total` DOUBLE NOT NULL,
   `Clientes_idClientes` INT NOT NULL,
   `Empleados_idEmpleados` INT NOT NULL,
-  `Empleados_Puesto_idPuesto` INT NOT NULL,
+  `Descuento` DOUBLE NOT NULL,
   PRIMARY KEY (`idPedidos`),
   CONSTRAINT `fk_Pedidos_Clientes1`
     FOREIGN KEY (`Clientes_idClientes`)
@@ -166,15 +139,15 @@ CREATE TABLE IF NOT EXISTS `gamecrush`.`Pedidos` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Pedidos_Empleados1`
-    FOREIGN KEY (`Empleados_idEmpleados` , `Empleados_Puesto_idPuesto`)
-    REFERENCES `gamecrush`.`Empleados` (`idEmpleados` , `Puesto_idPuesto`)
+    FOREIGN KEY (`Empleados_idEmpleados`)
+    REFERENCES `gamecrush`.`Empleados` (`idEmpleados`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_Pedidos_Clientes1_idx` ON `gamecrush`.`Pedidos` (`Clientes_idClientes` ASC);
 
-CREATE INDEX `fk_Pedidos_Empleados1_idx` ON `gamecrush`.`Pedidos` (`Empleados_idEmpleados` ASC, `Empleados_Puesto_idPuesto` ASC);
+CREATE INDEX `fk_Pedidos_Empleados1_idx` ON `gamecrush`.`Pedidos` (`Empleados_idEmpleados` ASC);
 
 
 -- -----------------------------------------------------
@@ -185,7 +158,7 @@ DROP TABLE IF EXISTS `gamecrush`.`Productos_has_Pedidos` ;
 CREATE TABLE IF NOT EXISTS `gamecrush`.`Productos_has_Pedidos` (
   `Productos_idProductos` INT NOT NULL,
   `Pedidos_idPedidos` INT NOT NULL,
-  PRIMARY KEY (`Productos_idProductos`, `Pedidos_idPedidos`),
+  `Cantidad_Pedido` INT NOT NULL,
   CONSTRAINT `fk_Productos_has_Pedidos_Productos1`
     FOREIGN KEY (`Productos_idProductos`)
     REFERENCES `gamecrush`.`Productos` (`idProductos`)
@@ -194,13 +167,13 @@ CREATE TABLE IF NOT EXISTS `gamecrush`.`Productos_has_Pedidos` (
   CONSTRAINT `fk_Productos_has_Pedidos_Pedidos1`
     FOREIGN KEY (`Pedidos_idPedidos`)
     REFERENCES `gamecrush`.`Pedidos` (`idPedidos`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Productos_has_Pedidos_Pedidos1_idx` ON `gamecrush`.`Productos_has_Pedidos` (`Pedidos_idPedidos` ASC);
-
 CREATE INDEX `fk_Productos_has_Pedidos_Productos1_idx` ON `gamecrush`.`Productos_has_Pedidos` (`Productos_idProductos` ASC);
+
+CREATE INDEX `fk_Productos_has_Pedidos_Pedidos1_idx` ON `gamecrush`.`Productos_has_Pedidos` (`Pedidos_idPedidos` ASC);
 
 
 -- -----------------------------------------------------
@@ -211,7 +184,7 @@ DROP TABLE IF EXISTS `gamecrush`.`Productos_has_Ventas` ;
 CREATE TABLE IF NOT EXISTS `gamecrush`.`Productos_has_Ventas` (
   `Productos_idProductos` INT NOT NULL,
   `Ventas_idVentas` INT NOT NULL,
-  PRIMARY KEY (`Productos_idProductos`, `Ventas_idVentas`),
+  `Cantidad_Venta` INT NOT NULL,
   CONSTRAINT `fk_Productos_has_Ventas_Productos1`
     FOREIGN KEY (`Productos_idProductos`)
     REFERENCES `gamecrush`.`Productos` (`idProductos`)
@@ -228,13 +201,87 @@ CREATE INDEX `fk_Productos_has_Ventas_Ventas1_idx` ON `gamecrush`.`Productos_has
 
 CREATE INDEX `fk_Productos_has_Ventas_Productos1_idx` ON `gamecrush`.`Productos_has_Ventas` (`Productos_idProductos` ASC);
 
-INSERT INTO Puesto VALUES(1,"Administrador");
-INSERT INTO Puesto VALUES(2,"Vendedor");
-
-
-INSERT INTO Empleados VALUES(1,"Administrador","Admin","istrador","123",1);
-INSERT INTO Empleados VALUES(2,"Vendedor","Vende","dor","123",2);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `gamecrush`.`Clientes`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `gamecrush`;
+INSERT INTO `gamecrush`.`Clientes` (`idClientes`, `nombres`, `apellido_p`, `apellido_m`, `telefono`, `email`) VALUES (1, 'Sami', 'El', 'Salami', '6141967490', 'Salchichon@gmail.com');
+INSERT INTO `gamecrush`.`Clientes` (`idClientes`, `nombres`, `apellido_p`, `apellido_m`, `telefono`, `email`) VALUES (2, 'Alan', 'Brito', 'Perez', '6141283530', 'Cables@gmail.com');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `gamecrush`.`Direccion`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `gamecrush`;
+INSERT INTO `gamecrush`.`Direccion` (`idDireccion`, `calle`, `colonia`, `num_interior`, `num_exterior`, `estado`, `pais`, `ciudad`, `codigo_postal`, `Clientes_idClientes`) VALUES (1, 'Pepperoni', 'Salchicha', NULL, '2', 'Chorizo', 'Italia', 'Bologna', 31125, 1);
+INSERT INTO `gamecrush`.`Direccion` (`idDireccion`, `calle`, `colonia`, `num_interior`, `num_exterior`, `estado`, `pais`, `ciudad`, `codigo_postal`, `Clientes_idClientes`) VALUES (2, 'Hierro', 'Metalera', NULL, '666', 'Heavy', 'Fierro', 'Titanio', 16661, 2);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `gamecrush`.`Productos`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `gamecrush`;
+INSERT INTO `gamecrush`.`Productos` (`idProductos`, `nombre_producto`, `tipo`, `precio`, `proveedor`, `cantidad`) VALUES (1, 'Nintendo 3DS', 'Consola', 130.0, 'Nintendo', 35);
+INSERT INTO `gamecrush`.`Productos` (`idProductos`, `nombre_producto`, `tipo`, `precio`, `proveedor`, `cantidad`) VALUES (2, 'Nintendo Wii', 'Consola', 190.0, 'Nintendo', 40);
+INSERT INTO `gamecrush`.`Productos` (`idProductos`, `nombre_producto`, `tipo`, `precio`, `proveedor`, `cantidad`) VALUES (3, 'Pokemon X', 'Juego', 40.0, 'Nintendo', 25);
+INSERT INTO `gamecrush`.`Productos` (`idProductos`, `nombre_producto`, `tipo`, `precio`, `proveedor`, `cantidad`) VALUES (4, 'Pokemon Y', 'Juego', 40.0, 'Nintendo', 25);
+INSERT INTO `gamecrush`.`Productos` (`idProductos`, `nombre_producto`, `tipo`, `precio`, `proveedor`, `cantidad`) VALUES (5, 'Stylus Pen 3DS', 'Accesorio', 5.0, 'Nintendo', 100);
+INSERT INTO `gamecrush`.`Productos` (`idProductos`, `nombre_producto`, `tipo`, `precio`, `proveedor`, `cantidad`) VALUES (6, 'Sony PlayStation 4', 'Consola', 299.0, 'Sony', 40);
+INSERT INTO `gamecrush`.`Productos` (`idProductos`, `nombre_producto`, `tipo`, `precio`, `proveedor`, `cantidad`) VALUES (7, 'X-Box One', 'Consola', 299.0, 'Microsoft', 40);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `gamecrush`.`Puesto`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `gamecrush`;
+INSERT INTO `gamecrush`.`Puesto` (`idPuesto`, `nombre_puesto`) VALUES (1, 'Administrador');
+INSERT INTO `gamecrush`.`Puesto` (`idPuesto`, `nombre_puesto`) VALUES (2, 'Vendedor');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `gamecrush`.`Empleados`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `gamecrush`;
+INSERT INTO `gamecrush`.`Empleados` (`idEmpleados`, `nombre`, `apellido_p`, `apellido_m`, `telefono`, `Puesto_idPuesto`) VALUES (1, 'Aquiles', 'Bailo', 'Esa', '1234', 1);
+INSERT INTO `gamecrush`.`Empleados` (`idEmpleados`, `nombre`, `apellido_p`, `apellido_m`, `telefono`, `Puesto_idPuesto`) VALUES (2, 'Rosa', 'Flores', 'Ramos', '1234', 2);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `gamecrush`.`Pedidos`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `gamecrush`;
+INSERT INTO `gamecrush`.`Pedidos` (`idPedidos`, `precio_total`, `Clientes_idClientes`, `Empleados_idEmpleados`, `Descuento`) VALUES (1, 130, 1, 1, 20);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `gamecrush`.`Productos_has_Pedidos`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `gamecrush`;
+INSERT INTO `gamecrush`.`Productos_has_Pedidos` (`Productos_idProductos`, `Pedidos_idPedidos`, `Cantidad_Pedido`) VALUES (1, 1, 1);
+
+COMMIT;
+
