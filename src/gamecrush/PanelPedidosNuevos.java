@@ -10,8 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,6 +29,10 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
         cargarProductos();
         cargarClienteS();
         jTablePedido.setModel(tmped);
+        
+        Validacion v = new Validacion();
+        v.Email(jTxtFldFindCliente);
+        v.SoloNumeros(jTxtFldDescuento);
     }
 
     public ResultSet cli, pro, ped, lastId, pedhas;
@@ -94,6 +98,12 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
             jTableClientes.setModel(tmcli);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getErrorCode() + ":" + e.getMessage());
+        }
+    }
+
+    public void clearClientes() {
+        for (int row = tmcli.getRowCount() - 1; row >= 0; row--) {
+            tmcli.removeRow(row);
         }
     }
 
@@ -220,6 +230,8 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
 
         jLabel2.setText("Precio Total:");
 
+        jTxtFldDescuento.setText("0.0");
+
         jLabel1.setText("Descuento");
 
         jBtnDesc.setText("Aplicar");
@@ -294,6 +306,7 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
     private void jTxtFldFindClienteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTxtFldFindClienteKeyTyped
         // TODO add your handling code here:
         try {
+            clearClientes();
             String sql = "SELECT * FROM clientes WHERE email LIKE ? ";
             Connection conn = Conexion.GetConnection();
             conn.setAutoCommit(false);
@@ -321,7 +334,16 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
     private void jTableProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableProductosMouseClicked
         // TODO add your handling code here:
         try {
+            
             Cant = Integer.parseInt(JOptionPane.showInputDialog("Cantidad"));
+            String input = Integer.toString(Cant);
+            Pattern p = Pattern.compile("[A-Z,a-z,&%$#@!()*^]");
+            Matcher m = p.matcher(input);
+            if(m.find()){
+                JOptionPane.showMessageDialog(this, "Por favor ingrese una cantidad valida");
+            }
+                
+            
             String idProd, nombreProd, newcant;
             int rows, index = 0;
             Double precio, total = 0.0;
@@ -345,9 +367,8 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
                     try {
                         compare2 = (String) tmped.getValueAt(x, 0);
                     } catch (Exception e) {
-                        System.out.println(e);
+
                     }
-                    System.out.println(compare + " " + compare2);
 
                     if (compare.equals(compare2)) {
                         flag = true;
@@ -360,18 +381,17 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
                     ++x;
                     ++index;
                 }
-                System.out.println(i);
 
                 if (flag) {
                     if (index - 1 < rows) {
                         index--;
                         flag = false;
-                        System.out.println("test " + index);
+
                         int updatecant = (int) tmped.getValueAt(index, 2) + Cant;
                         precio = (Double.parseDouble((String) tmprod.getValueAt(jTableProductos.getSelectedRow(), 3))) * updatecant;
                         tmped.setValueAt(updatecant, index, 2);
                         tmped.setValueAt(precio, index, 3);
-                        System.out.println("test " + index);
+
                     }
                 } else {
                     idProd = (String) tmprod.getValueAt(jTableProductos.getSelectedRow(), 0);
@@ -393,7 +413,7 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
 
             jBtnAceptar.setEnabled(true);
             jBtnCancel.setEnabled(true);
-        } catch (Exception e) {
+        } catch (HeadlessException | NumberFormatException e) {
             JOptionPane.showMessageDialog(this, e);
         }
 
@@ -445,8 +465,8 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
                         + "SET cantidad = cantidad - ? "
                         + "WHERE idproductos = ? ";
 
-                String sqlNewPedido = "INSERT INTO pedidos(precio_total,clientes_idclientes,empleados_idempleados) "
-                        + "VALUES( ?, ?, ?)";
+                String sqlNewPedido = "INSERT INTO pedidos(precio_total,clientes_idclientes,empleados_idempleados,descuento) "
+                        + "VALUES( ?, ?, ?, ?)";
 
                 String sqlPedHas = "INSERT INTO productos_has_pedidos(productos_idProductos, pedidos_idpedidos, cantidad_pedido) "
                         + "VALUES(?, ?, ?)";
@@ -470,6 +490,7 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
                         psProd.setString(1, jLblPrecio.getText());
                         psProd.setString(2, (String) tmcli.getValueAt(jTableClientes.getSelectedRow(), 0));
                         psProd.setString(3, empleado);
+                        psProd.setDouble(4, Double.parseDouble(jTxtFldDescuento.getText()));
 
                         psProd.execute();
                         connProd.commit();
@@ -483,8 +504,7 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
                         lastId = ps.executeQuery();
                         lastId.next();
                         String lastIdPed = lastId.getString(1);
-                        System.out.println(lastIdPed);
-                        
+
                         int rows2 = jTablePedido.getRowCount();
                         for (int j = 0; j < rows2; j++) {
                             psUpdate.setInt(1, (int) tmped.getValueAt(j, 2));
@@ -494,12 +514,12 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
                             connUpdate.commit();
 
                         }
-                        
-                        for(int j = 0; j < rows2; j++){
+
+                        for (int j = 0; j < rows2; j++) {
                             psPedHas.setString(1, (String) tmped.getValueAt(j, 0));
                             psPedHas.setString(2, lastIdPed);
                             psPedHas.setInt(3, (int) tmped.getValueAt(j, 2));
-                            
+
                             psPedHas.execute();
                             connPedHas.commit();
                         }
@@ -517,7 +537,7 @@ public class PanelPedidosNuevos extends javax.swing.JPanel {
         } catch (SQLException | HeadlessException e) {
             System.out.println(e.getMessage());
         }
-        
+
 
     }//GEN-LAST:event_jBtnAceptarActionPerformed
 

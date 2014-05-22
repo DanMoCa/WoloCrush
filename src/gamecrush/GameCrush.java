@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package gamecrush;
 
 /**
@@ -17,10 +16,11 @@ public class GameCrush {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        
+
         Login login = new Login();
-        
+
         login.setVisible(true);
+
     }
-    
+
 }

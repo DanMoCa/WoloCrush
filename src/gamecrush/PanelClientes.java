@@ -42,7 +42,13 @@ public class PanelClientes extends javax.swing.JPanel {
         initComponents();
         cargarClientes();
         
+        Validacion v = new Validacion();
         
+        v.SoloLetras(jTxtFldNombres);
+        v.SoloLetras(jTxtFldApellidoM);
+        v.SoloLetras(jTxtFldApellidoP);
+        v.Email(jTxtFldEMail);
+        v.codigoPostal(jTxtFldTelefono);
     }
 
     /**

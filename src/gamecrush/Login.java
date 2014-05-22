@@ -33,6 +33,11 @@ public class Login extends javax.swing.JFrame {
         URL resource = Administrador.class.getResource("/img/Icono.png");
         ImageIcon img = new ImageIcon(resource);
         this.setIconImage(img.getImage());
+        
+        Validacion v = new Validacion();
+        
+        v.SoloNumeros(jTxtFldUsername);
+        v.SoloNumeros(jTxtFldPassword);
     }
     
     @SuppressWarnings("unchecked")
@@ -44,9 +49,9 @@ public class Login extends javax.swing.JFrame {
         jLblUsername = new javax.swing.JLabel();
         jLblPassword = new javax.swing.JLabel();
         jTxtFldUsername = new javax.swing.JTextField();
-        jTxtFldPassword = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jBtnSalir = new javax.swing.JButton();
+        jTxtFldPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -84,7 +89,7 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addGap(105, 105, 105))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(13, 13, 13)
                         .addComponent(jLblLogo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -99,7 +104,7 @@ public class Login extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(31, 31, 31)
                                 .addComponent(jBtnLogin)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addGap(0, 48, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(118, 118, 118)
                                 .addComponent(jBtnSalir)))))
@@ -117,10 +122,10 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(jLblUsername)
                             .addComponent(jTxtFldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLblPassword)
                             .addComponent(jTxtFldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(37, 37, 37)
+                        .addGap(40, 40, 40)
                         .addComponent(jBtnLogin)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jBtnSalir))
@@ -221,7 +226,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLblLogo;
     private javax.swing.JLabel jLblPassword;
     private javax.swing.JLabel jLblUsername;
-    private javax.swing.JTextField jTxtFldPassword;
+    private javax.swing.JPasswordField jTxtFldPassword;
     private javax.swing.JTextField jTxtFldUsername;
     // End of variables declaration//GEN-END:variables
 }

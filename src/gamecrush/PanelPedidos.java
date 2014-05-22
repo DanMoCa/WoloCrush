@@ -5,20 +5,24 @@
  */
 package gamecrush;
 
+import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author DanDesktop
  */
-public class PanelPedidos extends javax.swing.JPanel {
+public class PanelPedidos extends javax.swing.JPanel implements ActionListener, MouseListener, KeyListener {
 
     /**
      * Creates new form PanelPedidos
@@ -28,7 +32,30 @@ public class PanelPedidos extends javax.swing.JPanel {
     public PanelPedidos() {
         initComponents();
         cargarPedidos();
+        
+        Validacion v = new Validacion();
+        v.SoloLetras(jTextField1);
+
     }
+    String[] columnsPed = {"id Pedido", "Cliente", "Empleado", "Total Pedido"};
+    DefaultTableModel tmPed = new DefaultTableModel(null, columnsPed) {
+        @Override
+        public boolean isCellEditable(int rowIndex, int colIndex) {
+            return false;
+        }
+    };
+
+    String[] columnspedHas = {"id Producto", "Producto", "Proveedor", "Cantidad", "Precio"};
+    DefaultTableModel tmPedHas = new DefaultTableModel(null, columnspedHas) {
+        @Override
+        public boolean isCellEditable(int rowIndex, int colIndex) {
+            if (colIndex == 3 && rowIndex == (int) jTablePedHas.getSelectedRow()) {
+                return true;
+            }
+            return false;
+        }
+        
+    };
 
     public void cargarPedidos() {
 
@@ -37,13 +64,6 @@ public class PanelPedidos extends javax.swing.JPanel {
                 + "WHERE t1.idclientes = t2.clientes_idclientes "
                 + "AND t3.idempleados = t2.empleados_idempleados "
                 + "ORDER BY id_pedido";
-        String[] columnsPed = {"id Pedido", "Cliente", "Empleado", "Total Pedido"};
-        DefaultTableModel tmPed = new DefaultTableModel(null, columnsPed) {
-            @Override
-            public boolean isCellEditable(int rowIndex, int colIndex) {
-                return false;
-            }
-        };
 
         try {
             Connection connPed = Conexion.GetConnection();
@@ -80,23 +100,37 @@ public class PanelPedidos extends javax.swing.JPanel {
                 }
             };
             PreparedStatement ps = connPedHas.prepareStatement(sql);
-            String idped = (String)jTablePedidos.getValueAt(jTablePedidos.getSelectedRow(), 0);
+            String idped = (String) jTablePedidos.getValueAt(jTablePedidos.getSelectedRow(), 0);
             ps.setString(1, idped);
-            
+
             this.PedidosHas = ps.executeQuery();
-            
-            while(PedidosHas.next()){
-                String [] row ={PedidosHas.getString(1),PedidosHas.getString(2),PedidosHas.getString(3),PedidosHas.getString(4),PedidosHas.getString(5)};
+
+            while (PedidosHas.next()) {
+                String[] row = {PedidosHas.getString(1), PedidosHas.getString(2), PedidosHas.getString(3), PedidosHas.getString(4), PedidosHas.getString(5)};
                 tmPedHas.addRow(row);
             }
-            
+
             jTablePedHas.setModel(tmPedHas);
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void clearPedidos() {
+        for (int row = tmPed.getRowCount() - 1; row >= 0; row--) {
+            tmPed.removeRow(row);
+
+        }
+    }
+
+    public void clearPedHas() {
+        for (int row = tmPedHas.getRowCount() - 1; row >= 0; row--) {
+            tmPedHas.removeRow(row);
         }
     }
 
     public String getSelectedPedido() {
-        String idpedido = (String) jTablePedidos.getValueAt(jTablePedidos.getSelectedRow(), 0);
+        String idpedido = (String) tmPed.getValueAt(jTablePedidos.getSelectedRow(), 0);
         return idpedido;
     }
 
@@ -114,10 +148,15 @@ public class PanelPedidos extends javax.swing.JPanel {
         jTablePedidos = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTablePedHas = new javax.swing.JTable();
+        jBtnDelete = new javax.swing.JButton();
+        jBtnUpdate = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jBtnBorrar = new javax.swing.JButton();
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setText("Buscar por Cliente");
+        jTextField1.addMouseListener(this);
+        jTextField1.addActionListener(this);
+        jTextField1.addKeyListener(this);
 
         jTablePedidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -130,29 +169,30 @@ public class PanelPedidos extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTablePedidos.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTablePedidosMouseClicked(evt);
-            }
-        });
+        jTablePedidos.addMouseListener(this);
         jScrollPane1.setViewportView(jTablePedidos);
 
         jTablePedHas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "id Producto", "Producto", "Proveedor", "Cantidad", "Precio"
             }
         ));
         jScrollPane2.setViewportView(jTablePedHas);
 
-        jButton1.setText("jButton1");
+        jBtnDelete.setText("Delete");
+        jBtnDelete.addActionListener(this);
 
-        jButton2.setText("jButton2");
+        jBtnUpdate.setText("Update");
+        jBtnUpdate.addActionListener(this);
+
+        jButton1.setText("Cargar Pedidos");
+        jButton1.addActionListener(this);
+
+        jBtnBorrar.setText("Borrar Pedido");
+        jBtnBorrar.addActionListener(this);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -166,13 +206,16 @@ public class PanelPedidos extends javax.swing.JPanel {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 777, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 751, Short.MAX_VALUE)
                             .addComponent(jScrollPane1))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2))
-                        .addGap(177, 177, 177))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jBtnUpdate)
+                                .addComponent(jBtnDelete))
+                            .addComponent(jBtnBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(179, 179, 179))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,16 +225,75 @@ public class PanelPedidos extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(174, 174, 174)
-                        .addComponent(jButton1)
+                        .addGap(51, 51, 51)
+                        .addComponent(jBtnBorrar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jBtnUpdate)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2)))
+                        .addComponent(jBtnDelete)
+                        .addGap(139, 139, 139)))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
+    }
+
+    // Code for dispatching events from components to event handlers.
+
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        if (evt.getSource() == jTextField1) {
+            PanelPedidos.this.jTextField1ActionPerformed(evt);
+        }
+        else if (evt.getSource() == jBtnDelete) {
+            PanelPedidos.this.jBtnDeleteActionPerformed(evt);
+        }
+        else if (evt.getSource() == jBtnUpdate) {
+            PanelPedidos.this.jBtnUpdateActionPerformed(evt);
+        }
+        else if (evt.getSource() == jButton1) {
+            PanelPedidos.this.jButton1ActionPerformed(evt);
+        }
+        else if (evt.getSource() == jBtnBorrar) {
+            PanelPedidos.this.jBtnBorrarActionPerformed(evt);
+        }
+    }
+
+    public void keyPressed(java.awt.event.KeyEvent evt) {
+    }
+
+    public void keyReleased(java.awt.event.KeyEvent evt) {
+    }
+
+    public void keyTyped(java.awt.event.KeyEvent evt) {
+        if (evt.getSource() == jTextField1) {
+            PanelPedidos.this.jTextField1KeyTyped(evt);
+        }
+    }
+
+    public void mouseClicked(java.awt.event.MouseEvent evt) {
+        if (evt.getSource() == jTablePedidos) {
+            PanelPedidos.this.jTablePedidosMouseClicked(evt);
+        }
+        else if (evt.getSource() == jTextField1) {
+            PanelPedidos.this.jTextField1MouseClicked(evt);
+        }
+    }
+
+    public void mouseEntered(java.awt.event.MouseEvent evt) {
+    }
+
+    public void mouseExited(java.awt.event.MouseEvent evt) {
+    }
+
+    public void mousePressed(java.awt.event.MouseEvent evt) {
+    }
+
+    public void mouseReleased(java.awt.event.MouseEvent evt) {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTablePedidosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePedidosMouseClicked
@@ -199,10 +301,230 @@ public class PanelPedidos extends javax.swing.JPanel {
         cargarPedHas();
     }//GEN-LAST:event_jTablePedidosMouseClicked
 
+    private void jBtnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnDeleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            String sql = "DELETE FROM productos_has_pedidos WHERE pedidos_idpedidos = ? AND productos_idproductos = ? ";
+            String sql1 = "SELECT descuento FROM pedidos WHERE idpedidos = ? ";
+            String sql2 = "UPDATE pedidos SET precio_total = ? WHERE idpedidos = ? ";
+            String sql3 = "UPDATE productos SET cantidad = cantidad + ? WHERE idproductos = ?";
+            Connection conn = Conexion.GetConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps1 = conn.prepareStatement(sql1);
+            PreparedStatement ps2 = conn.prepareStatement(sql2);
+            PreparedStatement ps3 = conn.prepareStatement(sql3);
+
+            //Borra producto del pedido
+            ps.setString(1, (String) tmPed.getValueAt(jTablePedidos.getSelectedRow(), 0));
+            ps.setString(2, (String) jTablePedHas.getValueAt(jTablePedHas.getSelectedRow(), 0));
+            ps.execute();
+
+            //Regres la cantidad a la tabla productos
+            ps3.setString(1, (String) jTablePedHas.getValueAt(jTablePedHas.getSelectedRow(), 3));
+            ps3.setString(2, (String) jTablePedHas.getValueAt(jTablePedHas.getSelectedRow(), 0));
+            ps3.execute();
+
+            cargarPedHas();
+            //Calcula el precio actual
+            Double precio = 0.0, desc, total;
+            int rows = jTablePedHas.getRowCount();
+            for (int j = 0; j < rows; j++) {
+                precio += (Double.parseDouble((String) jTablePedHas.getValueAt(j, 4)));
+            }
+
+            //Obtiene el descuento del pedido
+            ps1.setString(1, tmPed.getValueAt(jTablePedidos.getSelectedRow(), 0).toString());
+            Pedidos = ps1.executeQuery();
+            Pedidos.next();
+            desc = Pedidos.getDouble(1);
+
+            if (desc == 0.0) {
+                total = precio;
+            } else {
+                total = (1 - (desc / 100) * precio);
+            }
+
+            System.out.println(total);
+
+            ps2.setDouble(1, total);
+            ps2.setString(2, getSelectedPedido());
+            ps2.executeUpdate();
+            clearPedidos();
+            cargarPedidos();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_jBtnDeleteActionPerformed
+
+
+    private void jBtnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnUpdateActionPerformed
+        // TODO add your handling code here:
+        try {
+            jTextField1.setText("Buscar por Cliente");
+            //Actualiza la tabla de Productos_has_pedidos
+            String sql = "UPDATE productos_has_pedidos "
+                    + "SET cantidad_pedido = ? "
+                    + "WHERE productos_idproductos = ?";
+            //Actualiza la tabla productos
+            String sql1 = "UPDATE productos "
+                    + "SET cantidad = cantidad + ? "
+                    + "WHERE idproductos = ? ";
+            //Regresa la cantidad actual de productos de un pedido y su respectivo precio
+            String sql2 = "SELECT t1.cantidad_pedido "
+                    + "FROM productos_has_pedidos AS t1, productos AS t2 "
+                    + "WHERE t1.Productos_idProductos = t2.idProductos "
+                    + "AND t1.Pedidos_idPedidos = ? "
+                    + "ORDER BY Productos_idProductos";
+
+            String sql3 = "UPDATE pedidos "
+                    + "SET precio_total = ? - (precio_total*(descuento/100)) "
+                    + "WHERE idpedidos = ? ";
+
+            //Total - cantidad/Descuento  
+            Connection conn = Conexion.GetConnection();
+            conn.setAutoCommit(false);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps1 = conn.prepareStatement(sql1);
+            PreparedStatement ps2 = conn.prepareStatement(sql2);
+            PreparedStatement ps3 = conn.prepareStatement(sql3);
+            ps2.setString(1, (String) tmPed.getValueAt(jTablePedidos.getSelectedRow(), 0));
+
+            PedidosHas = ps2.executeQuery();
+
+            //Llena una lista con los valores antiguos
+            List rowValues = new ArrayList();
+            while (PedidosHas.next()) {
+                rowValues.add(PedidosHas.getString(1));
+            }
+
+            int rows = jTablePedHas.getRowCount();
+
+            for (int j = 0; j < rows - 1; j++) {
+                ps.setString(1, (String) jTablePedHas.getValueAt(j, 3));
+                ps.setString(2, (String) jTablePedHas.getValueAt(j, 0));
+                //viejo - nuevo
+
+                ps1.setInt(1, Integer.parseInt((String) rowValues.get(j)) - Integer.parseInt((String) jTablePedHas.getValueAt(j, 0)));
+                ps1.setString(2, (String) jTablePedHas.getValueAt(j, 0));
+
+                ps.executeUpdate();
+                conn.commit();
+                ps1.executeUpdate();
+                conn.commit();
+            }
+            Double total = 0.0;
+            int rows2 = jTablePedHas.getRowCount();
+            for (int j = 0; j < rows2; j++) {
+                total += (Double.parseDouble((String) jTablePedHas.getValueAt(j, 4)));
+
+            }
+
+            ps3.setDouble(1, total);
+            ps3.setString(2, (String) jTablePedidos.getValueAt(jTablePedidos.getSelectedRow(), 0));
+            ps3.executeUpdate();
+            conn.commit();
+            /*
+             */
+            clearPedidos();
+
+            cargarPedHas();
+            cargarPedidos();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_jBtnUpdateActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        clearPedidos();
+        cargarPedidos();
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jBtnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBorrarActionPerformed
+        // TODO add your handling code here:
+        try {
+            jTextField1.setText("Buscar por Cliente");
+            String sql = "DELETE FROM pedidos WHERE idpedidos = ? ";
+            String sql1 = "UPDATE productos "
+                    + "SET cantidad = cantidad + ? "
+                    + "WHERE idproductos = ? ";
+            Connection conn = Conexion.GetConnection();
+            conn.setAutoCommit(false);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps1 = conn.prepareStatement(sql1);
+
+            int rows = jTablePedHas.getRowCount();
+
+            for (int j = 0; j < rows; j++) {
+                ps1.setString(1, (String) jTablePedHas.getValueAt(j, 3));
+                ps1.setString(2, (String) jTablePedHas.getValueAt(j, 0));
+
+                ps1.executeUpdate();
+                conn.commit();
+            }
+
+            ps.setString(1, (String) jTablePedidos.getValueAt(jTablePedidos.getSelectedRow(), 0));
+            ps.execute();
+            conn.commit();
+            clearPedidos();
+            clearPedHas();
+            cargarPedidos();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_jBtnBorrarActionPerformed
+
+    private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked
+        // TODO add your handling code here:
+        jTextField1.setText("");
+    }//GEN-LAST:event_jTextField1MouseClicked
+
+    private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
+        // TODO add your handling code here:
+        try {
+            clearPedidos();
+            clearPedHas();
+            String sql = "SELECT t2.idpedidos AS id_pedido , t1.nombres AS clientes, t3.nombre AS empleado, t2.precio_total "
+                    + "FROM clientes AS t1, pedidos AS t2, empleados AS t3 "
+                    + "WHERE t1.idclientes = t2.clientes_idclientes "
+                    + "AND t3.idempleados = t2.empleados_idempleados "
+                    + "AND t1.nombres LIKE ? "
+                    + "ORDER BY t2.id_pedido";
+
+            Connection connPed = Conexion.GetConnection();
+            connPed.setAutoCommit(false);
+            PreparedStatement ps = connPed.prepareStatement(sql);
+            System.out.println("lol");
+            ps.setString(1, "%"+jTextField1.getText()+"%");
+            System.out.println("lel");
+            
+            Pedidos = ps.executeQuery();
+
+            while (Pedidos.next()) {
+                String[] row = {Pedidos.getString(1), Pedidos.getString(2), Pedidos.getString(3), Pedidos.getString(4)};
+                tmPed.addRow(row);
+            }
+            
+            jTablePedidos.setModel(tmPed);
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_jTextField1KeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBtnBorrar;
+    private javax.swing.JButton jBtnDelete;
+    private javax.swing.JButton jBtnUpdate;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTablePedHas;

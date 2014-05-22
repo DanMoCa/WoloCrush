@@ -39,6 +39,17 @@ public class PanelDirecciones extends javax.swing.JPanel {
         jTblDirecciones.setModel(tm);
         jLblCamposObligatorios.setVisible(false);
         disableCampos();
+        
+        Validacion v = new Validacion();
+        v.Email(jTxtFldFind);
+        v.SoloLetras(jTxtFldCalle);
+        v.SoloLetras(jTxtFldCiudad);
+        v.SoloLetras(jTxtFldColonia);
+        v.SoloLetras(jTxtFldEstado);
+        v.SoloLetras(jTxtFldPais);
+        v.codigoPostal(jTxtFldCP);
+        v.SoloNumeros(jTxtFldNumExt);
+        v.SoloNumeros(jTxtFldNumInt);
     }
     int cont = 0;
     ResultSet cli;

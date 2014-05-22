@@ -8,7 +8,8 @@ package gamecrush;
 
 import java.net.URL;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -20,6 +21,7 @@ public class Administrador extends javax.swing.JFrame {
      * Creates new form Administrador
      */
     public Administrador() {
+        
         this.setTitle("Ventana Administrador");
         initComponents();
         URL resource = Administrador.class.getResource("/img/Icono.png");
@@ -31,6 +33,7 @@ public class Administrador extends javax.swing.JFrame {
         
     }
 
+    int index;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,6 +58,12 @@ public class Administrador extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImages(null);
+
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
 
         jMenu1.setText("Menu");
 
@@ -131,7 +140,10 @@ public class Administrador extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1181, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1161, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,9 +164,10 @@ public class Administrador extends javax.swing.JFrame {
         Login log = new Login();
         log.setVisible(true);
         this.dispose();
-        System.out.println("Holi");
+        
     }//GEN-LAST:event_jMenuLoginActionPerformed
 
+    
     private void jMenuEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuEmpleadosActionPerformed
         // TODO add your handling code here:
         jTabbedPane1.removeAll();
@@ -186,6 +199,11 @@ public class Administrador extends javax.swing.JFrame {
         jTabbedPane1.add(new PanelPedidosNuevos(),"Nuevo Pedido");
         jTabbedPane1.add(new PanelPedidos(),"Pedidos");
     }//GEN-LAST:event_jMenuPedidosActionPerformed
+
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
 
     /**
      * @param args the command line arguments

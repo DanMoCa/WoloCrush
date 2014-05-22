@@ -46,6 +46,13 @@ public final class PanelEmpleados extends javax.swing.JPanel {
         val.validateIdPuesto(this.jTxtFldPuesto);
         this.jTxtFldPuesto.setDocument(new jTxtFldLimit(1));
         
+        Validacion v = new  Validacion();
+        v.SoloLetras(jTxtFldNombre);
+        v.SoloLetras(jTxtFldApellidoM);
+        v.SoloLetras(jTxtFldApellidoP);
+        v.codigoPostal(jTxtFldPuesto);
+        v.codigoPostal(jTxtFldTelefono);
+        
     }
 
     /**
